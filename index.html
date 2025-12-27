@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚡ Thunder Intel</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #111;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  .container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    width: 300px;
+    text-align: center;
+  }
+
+  input, button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+  }
+
+  input {
+    background: #333;
+    color: #fff;
+  }
+
+  button {
+    background: #ffcc00;
+    color: #111;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  button:hover {
+    background: #ffdd33;
+  }
+
+  #result {
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>⚡ Thunder Intel</h1>
+  <input type="text" id="username" placeholder="Your Name" />
+  <input type="text" id="phoneNumber" placeholder="Mobile Number" />
+  <button onclick="search()">⚡ Search</button>
+  <div id="result"></div>
+</div>
+
+<script>
+  async function search() {
+    const username = document.getElementById('username').value;
+    const phoneNumber = document.getElementById('phoneNumber').value;
+    const resultDiv = document.getElementById('result');
+
+    if (!phoneNumber) {
+      resultDiv.innerHTML = 'Please enter a mobile number.';
+      return;
+    }
+
+    resultDiv.innerHTML = 'Searching...';
+
+    try {
+      const response = await fetch(`/api/search?q=${encodeURIComponent(phoneNumber)}`);
+      const data = await response.json();
+
+      if (data.status === 'success' && data.data.length > 0) {
+        resultDiv.innerHTML = `<h3>Hello, ${username || 'User'}</h3>`;
+
+        data.data.forEach(item => {
+          resultDiv.innerHTML += `
+            <div>
+              <p><strong>Name:</strong> ${item["👤 Name"]}</p>
+              <p><strong>Father Name:</strong> ${item["👨 Father Name"]}</p>
+              <p><strong>Mobile:</strong> ${item["📱 Mobile"]}</p>
+              <p><strong>Aadhaar:</strong> ${item["🆔 Aadhaar"]}</p>
+              <p><strong>Address:</strong> ${item["🏠 Address"]}</p>
+              <p><strong>Circle:</strong> ${item["📡 Circle"]}</p>
+            </div>
+            <hr>
+          `;
+        });
+      } else {
+        resultDiv.innerHTML = 'No data found.';
+      }
+    } catch (error) {
+      resultDiv.innerHTML = 'Error fetching data.';
+    }
+  }
+</script>
+
+</body>
+</html>
