@@ -10,8 +10,7 @@ export default async function handler(req, res) {
     }
 
     const response = await fetch(
-      `https://idinfonumber-hde6.onrender.com/api/search?q=${q}&key=pass3LIKA`
-    );
+      `https://idinfonumber-hde6.onrender.com/api/search?q=${encodeURIComponent(phoneNumber)}&key=pass3LIKA;
 
     const data = await response.json();
 
