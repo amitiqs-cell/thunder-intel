@@ -1,47 +1,28 @@
-export default async function handler(req, res) {
-  try {
-    const { q } = req.query;
+// search.js
 
-    if (!q) {
-      return res.status(400).json({
-        status: "error",
-        message: "Mobile number required"
-      });
-    }
+module.exports = async (req, res) => {
+  const phoneNumber = req.query.q;
+  const apiKey = req.query.key;
 
-    const response = await fetch(
-      `https://idinfonumber-hde6.onrender.com/api/search?q=${encodeURIComponent(phoneNumber)}&key=pass3LIKA;
-
-    const data = await response.json();
-
-    if (!data.results || data.results.length === 0) {
-      return res.status(404).json({
-        status: "not_found",
-        message: "No data found"
-      });
-    }
-
-    const formatted = data.results.map(item => ({
-      "👤 Name": item.name?.trim() || "N/A",
-      "👨 Father Name": item.father_name?.trim() || "N/A",
-      "📱 Mobile": item.mobile?.trim(),
-      "🆔 Aadhaar": item.aadhar
-        ? item.aadhar.replace(/^(\d{4})\d{4}(\d{4})$/, "$1-XXXX-$2")
-        : "N/A",
-      "🏠 Address": item.address?.replace(/!/g, ","),
-      "📡 Circle": item.circle
-    }));
-
-    res.status(200).json({
-      status: "success",
-      total: formatted.length,
-      data: formatted
-    });
-
-  } catch (err) {
-    res.status(500).json({
-      status: "error",
-      message: "Server error"
-    });
+  if (!phoneNumber || !apiKey || apiKey !== 'pass3LIKA') {
+    return res.status(400).json({ error: 'Invalid request or missing key.' });
   }
-}
+
+  // Simulate fetching data (you would replace this with your actual data fetching logic)
+  const results = [
+    {
+      name: "Rahil Begam",
+      father_name: "Mauhmmad Karimuddin",
+      mobile: phoneNumber,
+      aadhar: "476083612998",
+      address: "W/O Mauhmmad Karimuddin!house no-238!!  jalalpur raghunathpur Basantpur Saitli  !Ghaziabad!Uttar Pradesh!201206",
+      circle: "AIRTEL UPW"
+    }
+  ];
+
+  // Respond with emoji and data
+  return res.status(200).json({
+    message: "🔍 Here is the result:",
+    results: results
+  });
+};
